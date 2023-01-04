@@ -44,7 +44,7 @@ public class SwaggerConfig {
                 .description("Post, User Rest Api")
                 .version("0.0.1")
                 .termsOfServiceUrl("Terms of service")
-                .contact(new Contact("Hyun Jun Hwang", "https://github.com/GreenByMe/GreenByMe_Server", "xowjd41@naver.com"))
+                .contact(new Contact("Hyun Jun Hwang", "https://github.com/hyunjunhwang1994/Spring_Skillful_Week_Assignment", "hyunjunhwang1994@gmail.com"))
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .build();

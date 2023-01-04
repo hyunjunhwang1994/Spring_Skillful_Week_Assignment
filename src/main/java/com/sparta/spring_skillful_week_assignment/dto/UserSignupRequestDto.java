@@ -16,9 +16,13 @@ public class UserSignupRequestDto {
     private String username;
 
 
-    @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*[0-9]).{8,15}$",
+    @Pattern(regexp = "(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])^.{8,16}$",
     message = ResponseMessage.CREATED_USER_FAIL_PASSWORD_FAIL)
     private String password;
+
+
+    private boolean admin = false;
+    private String adminToken = "";
 
 
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -23,11 +23,19 @@ public class User {
     @Column
     private String password;
 
-    @OneToMany
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
+    @OneToMany(mappedBy = "user")
     List<Post> posts = new ArrayList<>();
 
-    public User(String username, String password) {
+    @OneToMany(mappedBy = "user")
+    List<Comment> comments = new ArrayList<>();
+
+    public User(String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 }

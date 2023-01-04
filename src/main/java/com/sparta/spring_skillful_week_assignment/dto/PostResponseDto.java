@@ -1,12 +1,13 @@
 package com.sparta.spring_skillful_week_assignment.dto;
 
+import com.sparta.spring_skillful_week_assignment.entity.Comment;
 import com.sparta.spring_skillful_week_assignment.entity.Post;
-import com.sparta.spring_skillful_week_assignment.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,9 +22,12 @@ public class PostResponseDto {
     private String author;
     private String username;
 
+    private List<Comment> comment;
+
+
 
     // entity -> dto
-    public PostResponseDto(Post post) {
+    public PostResponseDto(Post post, List<Comment> comment) {
         this.id = post.getId();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
@@ -31,6 +35,7 @@ public class PostResponseDto {
         this.contents = post.getContents();
         this.author = post.getAuthor();
         this.username = post.getUser().getUsername();
+        this.comment = comment;
     }
 
 }

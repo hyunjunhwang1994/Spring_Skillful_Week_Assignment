@@ -1,11 +1,15 @@
 package com.sparta.spring_skillful_week_assignment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sparta.spring_skillful_week_assignment.dto.PostRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -16,7 +20,7 @@ public class Post extends Timestamped{
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -35,6 +39,8 @@ public class Post extends Timestamped{
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "post")
+    List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Post(Long id, String title, String contents, String author) {

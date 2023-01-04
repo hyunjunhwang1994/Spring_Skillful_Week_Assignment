@@ -1,0 +1,176 @@
+package com.sparta.spring_skillful_week_assignment.service;
+
+
+import com.sparta.spring_skillful_week_assignment.dto.*;
+import com.sparta.spring_skillful_week_assignment.entity.Comment;
+import com.sparta.spring_skillful_week_assignment.entity.Post;
+import com.sparta.spring_skillful_week_assignment.entity.User;
+import com.sparta.spring_skillful_week_assignment.jwt.JwtUtil;
+import com.sparta.spring_skillful_week_assignment.message.ResponseMessage;
+import com.sparta.spring_skillful_week_assignment.message.StatusCode;
+import com.sparta.spring_skillful_week_assignment.repository.CommentRepository;
+import com.sparta.spring_skillful_week_assignment.repository.PostRepository;
+import com.sparta.spring_skillful_week_assignment.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class CommentService {
+
+
+    private final CommentRepository commentRepository;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final PostRepository postRepository;
+
+    @Transactional
+    public CommentsResponseDto createComments(Long id, CommentsRequestDto requestDto, HttpServletRequest request) {
+
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+
+                claims = jwtUtil.getUserInfoFromToken(token);
+
+
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            Optional<User> optionalUser = userRepository.findByUsername(claims.getSubject());
+
+            if (!optionalUser.isPresent()) {
+                return CommentsResponseDto.responseDto(StatusCode.BAD_REQUEST
+                        , ResponseMessage.USER_NOT_FOUND, null);
+            }
+
+            User user = optionalUser.get();
+
+
+            Optional<Post> optionalPost = postRepository.findById(id);
+
+            if (!optionalPost.isPresent()) {
+                return CommentsResponseDto.responseDto(StatusCode.BAD_REQUEST
+                        , ResponseMessage.NOT_FOUND_POST, null);
+            }
+
+            Post post = optionalPost.get();
+
+
+            Comment comment = new Comment(requestDto,user,post);
+
+
+
+            commentRepository.save(comment);
+
+
+            return CommentsResponseDto.responseDto(StatusCode.OK
+                    , ResponseMessage.CREATE_COMMENT_SUCCESS, comment.getContents());
+
+
+
+        } else {
+            return CommentsResponseDto.responseDto(StatusCode.BAD_REQUEST
+                    , ResponseMessage.TOKEN_AUTH_ERROR, null);
+        }
+
+
+
+
+    }
+
+    @Transactional
+    public CommentsResponseDto updateComments(Long id, CommentsRequestDto requestDto, HttpServletRequest request) {
+
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+
+                claims = jwtUtil.getUserInfoFromToken(token);
+
+
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+
+            Comment comment = commentRepository.findByIdAndUser_Id(id, user.getId());
+
+            if(comment != null){
+
+                comment.updateComment(requestDto);
+
+                return CommentsResponseDto.responseDto(StatusCode.OK
+                        , ResponseMessage.UPDATE_COMMENT_SUCCESS, comment.getContents());
+
+            }else{
+                return CommentsResponseDto.responseDto(StatusCode.OK
+                        , ResponseMessage.UPDATE_COMMENT_FAIL, null);
+            }
+
+
+
+
+
+
+
+        } else {
+            return CommentsResponseDto.responseDto(StatusCode.OK
+                    , ResponseMessage.UPDATE_COMMENT_FAIL, null);
+        }
+
+
+
+    }
+
+
+    public CommentsResponseDto deleteComments(Long id, HttpServletRequest request) {
+
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            Comment comment = commentRepository.findByIdAndUser_Id(id, user.getId());
+
+            if(comment != null){
+                commentRepository.deleteById(id);
+
+                return CommentsResponseDto.responseDto(StatusCode.OK
+                        , ResponseMessage.DELETE_COMMENT_SUCCESS, comment.getContents());
+
+            }else{
+                return CommentsResponseDto.responseDto(StatusCode.OK
+                        , ResponseMessage.DELETE_COMMENT_FAIL, null);
+            }
+
+
+        } else {
+            return CommentsResponseDto.responseDto(StatusCode.OK
+                    , ResponseMessage.DELETE_COMMENT_FAIL, null);
+        }
+
+    }
+}

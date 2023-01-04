@@ -3,7 +3,6 @@ package com.sparta.spring_skillful_week_assignment.controller;
 import com.sparta.spring_skillful_week_assignment.dto.PostDeleteResponseDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostRequestDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostResponseDto;
-import com.sparta.spring_skillful_week_assignment.dto.UserLoginResponseDto;
 import com.sparta.spring_skillful_week_assignment.message.StatusCode;
 import com.sparta.spring_skillful_week_assignment.service.PostService;
 import io.swagger.annotations.ApiOperation;

@@ -3,6 +3,7 @@ package com.sparta.spring_skillful_week_assignment.service;
 
 import com.sparta.spring_skillful_week_assignment.dto.*;
 import com.sparta.spring_skillful_week_assignment.entity.User;
+import com.sparta.spring_skillful_week_assignment.entity.UserRoleEnum;
 import com.sparta.spring_skillful_week_assignment.message.ResponseMessage;
 import com.sparta.spring_skillful_week_assignment.message.StatusCode;
 import com.sparta.spring_skillful_week_assignment.jwt.JwtUtil;
@@ -23,6 +24,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
+    private static final String ADMIN_TOKEN = "dqp2020!)1)!zsjsjcmcmwml2XZNDk";
+
     @Transactional
     public UserSignupResponseDto signup(UserSignupRequestDto userSignupRequestDto) {
         String username = userSignupRequestDto.getUsername();
@@ -32,15 +35,31 @@ public class UserService {
         // 회원 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
-            return UserSignupResponseDto.responseDto(StatusCode.OK
+            return UserSignupResponseDto.responseDto(StatusCode.BAD_REQUEST
                     , ResponseMessage.CREATED_USER_FAIL_ALREADY_EXISTS, userSignupRequestDto );
 
         }
 
-        User user = new User(username, password);
+        UserRoleEnum role = UserRoleEnum.USER;
+        if(userSignupRequestDto.isAdmin()){
+
+            if (!userSignupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
+                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+            }
+            role = UserRoleEnum.ADMIN;
+
+        }
+
+        User user = new User(username, password, role);
         userRepository.save(user);
+
+        userSignupRequestDto.setAdminToken(null);
+
         return UserSignupResponseDto.responseDto(StatusCode.OK
                 , ResponseMessage.CREATED_USER, userSignupRequestDto );
+
+
+
     }
 
 
@@ -50,13 +69,19 @@ public class UserService {
         String password = userLoginRequestDto.getPassword();
 
         // 사용자 확인
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-        );
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            return new UserLoginResponseDto(StatusCode.BAD_REQUEST,
+                    ResponseMessage.LOGIN_FAIL, null);
+        }
+
+        User user = optionalUser.get();
 
         // 비밀번호 확인
         if(!user.getPassword().equals(password)){
-            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            return new UserLoginResponseDto(StatusCode.BAD_REQUEST,
+                    ResponseMessage.LOGIN_FAIL, null);
         }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername()));

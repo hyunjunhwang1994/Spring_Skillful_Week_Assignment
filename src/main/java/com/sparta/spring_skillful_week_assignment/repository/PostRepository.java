@@ -12,6 +12,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     int deleteByIdAndUser_Id(Long id, Long userId);
 
 
+
     Post findByIdAndUser_Id(Long id, Long userId);
+
+
 
 }

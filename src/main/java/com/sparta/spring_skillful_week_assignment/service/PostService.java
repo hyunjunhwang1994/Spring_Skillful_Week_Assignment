@@ -4,11 +4,14 @@ package com.sparta.spring_skillful_week_assignment.service;
 import com.sparta.spring_skillful_week_assignment.dto.PostDeleteResponseDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostRequestDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostResponseDto;
+import com.sparta.spring_skillful_week_assignment.entity.Comment;
 import com.sparta.spring_skillful_week_assignment.entity.Post;
 import com.sparta.spring_skillful_week_assignment.entity.User;
+import com.sparta.spring_skillful_week_assignment.entity.UserRoleEnum;
 import com.sparta.spring_skillful_week_assignment.jwt.JwtUtil;
 import com.sparta.spring_skillful_week_assignment.message.ResponseMessage;
 import com.sparta.spring_skillful_week_assignment.message.StatusCode;
+import com.sparta.spring_skillful_week_assignment.repository.CommentRepository;
 import com.sparta.spring_skillful_week_assignment.repository.PostRepository;
 import com.sparta.spring_skillful_week_assignment.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final JwtUtil jwtUtil;
 
 
@@ -41,7 +46,7 @@ public class PostService {
 
                 claims = jwtUtil.getUserInfoFromToken(token);
 
-                System.out.println("토큰검증");
+
             } else {
                 throw new IllegalArgumentException("Token Error");
             }
@@ -56,22 +61,13 @@ public class PostService {
 
             postRepository.save(post);
 
-            PostResponseDto postResponseDto = new PostResponseDto(post);
+            PostResponseDto postResponseDto = new PostResponseDto(post, null);//todo
 
             return postResponseDto;
 
         } else {
             return null;
         }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -86,8 +82,17 @@ public class PostService {
 
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
 
+
+
+        List<Comment> commentList;
+
+
         for (Post post : postList) {
-            PostResponseDto postResponseDto = new PostResponseDto(post);//todo
+
+            commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
+
+            PostResponseDto postResponseDto = new PostResponseDto(post, commentList);
+
             postResponseDtoList.add(postResponseDto);
 
         }
@@ -104,7 +109,10 @@ public class PostService {
         );
 
 
-        PostResponseDto postResponseDto = new PostResponseDto(post);
+        List<Comment> commentList =
+                commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
+
+        PostResponseDto postResponseDto = new PostResponseDto(post, commentList);
 
 
         return postResponseDto;
@@ -134,7 +142,31 @@ public class PostService {
             );
 
 
+            if (user.getRole() == UserRoleEnum.ADMIN) {
+
+                Optional<Post> post = postRepository.findById(id);
+
+                if (post.isPresent()) {
+                    postRepository.deleteById(id);
+
+                    PostDeleteResponseDto postDeleteResponseDto = new PostDeleteResponseDto(
+                            StatusCode.OK, ResponseMessage.POST_DELETE_SUCCESS,1);
+                    return postDeleteResponseDto;
+
+                }else{
+
+                    PostDeleteResponseDto postDeleteResponseDto = new PostDeleteResponseDto(
+                            StatusCode.OK, ResponseMessage.POST_DELETE_FAIL,0);
+                    return postDeleteResponseDto;
+
+                }
+            }
+
+
+
             int result = postRepository.deleteByIdAndUser_Id(id, user.getId());
+
+
 
 
             if(result == 1){
@@ -187,7 +219,7 @@ public class PostService {
 
                 post.updatePost(requestDto);
 
-                PostResponseDto postResponseDto = new PostResponseDto(post);
+                PostResponseDto postResponseDto = new PostResponseDto(post, null);//todo
 
                 return postResponseDto;
             }else{

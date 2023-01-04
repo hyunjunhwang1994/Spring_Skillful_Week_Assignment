@@ -8,6 +8,7 @@ import com.sparta.spring_skillful_week_assignment.dto.UserSignupResponseDto;
 import com.sparta.spring_skillful_week_assignment.message.ResponseMessage;
 import com.sparta.spring_skillful_week_assignment.message.StatusCode;
 import com.sparta.spring_skillful_week_assignment.service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.Charset;
@@ -30,9 +32,10 @@ public class UserController {
 
     private final UserService userService;
 
+
     @PostMapping("/signup")
     public UserSignupResponseDto signup(@RequestBody @Validated UserSignupRequestDto userSignupRequestDto
-            , Errors errors) {
+            , @ApiIgnore Errors errors) {
         // 유효성 검증
         if (errors.hasErrors()) {
             return UserSignupResponseDto.responseDto(StatusCode.OK
