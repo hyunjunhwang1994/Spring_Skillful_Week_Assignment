@@ -4,7 +4,7 @@
 
 
 # API 명세
-
+[노션 API 명세](https://www.notion.so/1637f9f485744a07af38e702640a90e3?v=2a49163ff9ba485f9bbe95cf8b18a929)
 
 -
 
