@@ -1,5 +1,6 @@
 package com.sparta.spring_skillful_week_assignment.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sparta.spring_skillful_week_assignment.entity.Comment;
 import com.sparta.spring_skillful_week_assignment.entity.Post;
 import lombok.Getter;
@@ -15,11 +16,12 @@ import java.util.List;
 public class PostResponseDto {
 
     private Long id;
+
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private String title;
     private String contents;
-    private String author;
+
     private String username;
 
     private List<PostCommentResponseDto> comment;
@@ -33,7 +35,6 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.title = post.getTitle();
         this.contents = post.getContents();
-        this.author = post.getAuthor();
         this.username = post.getUser().getUsername();
         this.comment = comment;
     }

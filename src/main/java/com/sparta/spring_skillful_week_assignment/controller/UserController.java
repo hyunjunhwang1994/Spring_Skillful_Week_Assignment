@@ -8,7 +8,6 @@ import com.sparta.spring_skillful_week_assignment.dto.UserSignupResponseDto;
 import com.sparta.spring_skillful_week_assignment.message.ResponseMessage;
 import com.sparta.spring_skillful_week_assignment.message.StatusCode;
 import com.sparta.spring_skillful_week_assignment.service.UserService;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -4,7 +4,6 @@ package com.sparta.spring_skillful_week_assignment.controller;
 import com.sparta.spring_skillful_week_assignment.dto.CommentsRequestDto;
 import com.sparta.spring_skillful_week_assignment.dto.CommentsResponseDto;
 import com.sparta.spring_skillful_week_assignment.service.CommentService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@ApiOperation(value = "Comment Rest API 입니다.")
 public class CommentController {
 
     private final CommentService commentService;

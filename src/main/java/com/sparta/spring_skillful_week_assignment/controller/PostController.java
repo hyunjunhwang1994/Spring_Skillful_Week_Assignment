@@ -5,7 +5,6 @@ import com.sparta.spring_skillful_week_assignment.dto.PostRequestDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostResponseDto;
 import com.sparta.spring_skillful_week_assignment.message.StatusCode;
 import com.sparta.spring_skillful_week_assignment.service.PostService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,7 +18,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@ApiOperation(value = "Post Rest API 입니다.")
 public class PostController {
 
     private final PostService postService;
@@ -42,13 +40,19 @@ public class PostController {
 
         PostResponseDto postResponseDto = postService.readPost(id);
 
+
         return postResponseDto;
     }
 
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<PostDeleteResponseDto>  deletePost(@PathVariable Long id, HttpServletRequest request) {
 
+
+
+
         PostDeleteResponseDto postDeleteResponseDto = postService.deletePost(id,request);
+
+
 
 
         HttpHeaders headers = new HttpHeaders();

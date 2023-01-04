@@ -30,9 +30,6 @@ public class Post extends Timestamped{
     @Column(length = 50000, nullable = false)
     private String contents;
 
-    @Column(nullable = false)
-    private String author;
-
 
 
     @ManyToOne
@@ -43,12 +40,12 @@ public class Post extends Timestamped{
     List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(Long id, String title, String contents, String author) {
+    public Post(Long id, String title, String contents) {
 
         this.id = id;
         this.title = title;
         this.contents = contents;
-        this.author = author;
+
 
     }
 
@@ -56,14 +53,12 @@ public class Post extends Timestamped{
 
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
-        this.author = requestDto.getAuthor();
         this.user = user;
     }
 
     public void updatePost(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
-        this.author = requestDto.getAuthor();
     }
 
 }

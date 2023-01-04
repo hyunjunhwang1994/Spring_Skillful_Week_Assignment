@@ -12,16 +12,14 @@ public class PostRequestDto {
 
     private String title;
     private String contents;
-    private String author;
 
 
 
 
     @Builder
-    public PostRequestDto(String title, String contents, String author) {
+    public PostRequestDto(String title, String contents) {
         this.title = title;
         this.contents = contents;
-        this.author = author;
 
     }
 
@@ -31,7 +29,6 @@ public class PostRequestDto {
         return Post.builder()
                 .title(title)
                 .contents(contents)
-                .author(author)
                 .build();
     }
 

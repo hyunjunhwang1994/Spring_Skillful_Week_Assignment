@@ -62,7 +62,16 @@ public class PostService {
 
             postRepository.save(post);
 
-            PostResponseDto postResponseDto = new PostResponseDto(post, null);//todo
+
+            List<Comment> commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
+            List<PostCommentResponseDto> postCommentResponseDto = new ArrayList<>();
+
+            for (Comment comment : commentList) {
+                postCommentResponseDto.add(new PostCommentResponseDto(comment));
+
+            }
+
+            PostResponseDto postResponseDto = new PostResponseDto(post, postCommentResponseDto);
 
             return postResponseDto;
 
@@ -91,6 +100,8 @@ public class PostService {
 
         for (Post post : postList) {
 
+
+
             commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
 
             for (Comment comment : commentList) {
@@ -113,10 +124,17 @@ public class PostService {
         );
 
 
-        List<Comment> commentList =
-                commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
 
-        PostResponseDto postResponseDto = new PostResponseDto(post, null);//todo
+        List<Comment> commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
+        List<PostCommentResponseDto> postCommentResponseDto = new ArrayList<>();
+
+        for (Comment comment : commentList) {
+            postCommentResponseDto.add(new PostCommentResponseDto(comment));
+
+        }
+
+        PostResponseDto postResponseDto = new PostResponseDto(post, postCommentResponseDto);
+
 
 
         return postResponseDto;
@@ -171,8 +189,6 @@ public class PostService {
             int result = postRepository.deleteByIdAndUser_Id(id, user.getId());
 
 
-
-
             if(result == 1){
                 PostDeleteResponseDto postDeleteResponseDto = new PostDeleteResponseDto(
                         StatusCode.OK, ResponseMessage.POST_DELETE_SUCCESS,result);
@@ -222,8 +238,17 @@ public class PostService {
 
 
                 post.updatePost(requestDto);
+                List<Comment> commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
+                List<PostCommentResponseDto> postCommentResponseDto = new ArrayList<>();
 
-                PostResponseDto postResponseDto = new PostResponseDto(post, null);//todo
+                for (Comment comment : commentList) {
+                    postCommentResponseDto.add(new PostCommentResponseDto(comment));
+
+                }
+
+                PostResponseDto postResponseDto = new PostResponseDto(post, postCommentResponseDto);
+
+
 
                 return postResponseDto;
             }else{

@@ -31,11 +31,11 @@ public class SampleApplicationRunner implements ApplicationRunner {
 
 
         PostRequestDto postRequestDto = new PostRequestDto(
-                "제목1", "컨텐츠1", "작성자1"
+                "제목1", "컨텐츠1"
         );
 
         PostRequestDto postRequestDto2 = new PostRequestDto(
-                "제목2", "컨텐츠2", "작성자2"
+                "제목2", "컨텐츠2"
         );
 
         Post post1 = new Post(postRequestDto, user);

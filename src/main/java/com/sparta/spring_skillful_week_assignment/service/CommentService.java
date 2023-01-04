@@ -67,13 +67,12 @@ public class CommentService {
 
             Comment comment = new Comment(requestDto,user,post);
 
-
-
             commentRepository.save(comment);
 
+            PostCommentResponseDto postCommentResponseDto = new PostCommentResponseDto(comment);
 
             return CommentsResponseDto.responseDto(StatusCode.OK
-                    , ResponseMessage.CREATE_COMMENT_SUCCESS, comment.getContents());
+                    , ResponseMessage.CREATE_COMMENT_SUCCESS, postCommentResponseDto);
 
 
 
@@ -114,8 +113,10 @@ public class CommentService {
 
                 comment.updateComment(requestDto);
 
+                PostCommentResponseDto postCommentResponseDto = new PostCommentResponseDto(comment);
+
                 return CommentsResponseDto.responseDto(StatusCode.OK
-                        , ResponseMessage.UPDATE_COMMENT_SUCCESS, comment.getContents());
+                        , ResponseMessage.UPDATE_COMMENT_SUCCESS, postCommentResponseDto);
 
             }else{
                 return CommentsResponseDto.responseDto(StatusCode.OK
