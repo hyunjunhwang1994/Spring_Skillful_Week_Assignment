@@ -1,6 +1,7 @@
 package com.sparta.spring_skillful_week_assignment.service;
 
 
+import com.sparta.spring_skillful_week_assignment.dto.PostCommentResponseDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostDeleteResponseDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostRequestDto;
 import com.sparta.spring_skillful_week_assignment.dto.PostResponseDto;
@@ -78,27 +79,30 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
 
-        List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
 
+        List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
 
 
 
         List<Comment> commentList;
+        List<PostCommentResponseDto> postCommentResponseDto = new ArrayList<>();
 
 
         for (Post post : postList) {
 
             commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
 
-            PostResponseDto postResponseDto = new PostResponseDto(post, commentList);
+            for (Comment comment : commentList) {
+                postCommentResponseDto.add(new PostCommentResponseDto(comment));
 
+            }
+            PostResponseDto postResponseDto = new PostResponseDto(post, postCommentResponseDto);
             postResponseDtoList.add(postResponseDto);
 
         }
 
         return postResponseDtoList;
-
     }
 
     @Transactional(readOnly = true)
@@ -112,7 +116,7 @@ public class PostService {
         List<Comment> commentList =
                 commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
 
-        PostResponseDto postResponseDto = new PostResponseDto(post, commentList);
+        PostResponseDto postResponseDto = new PostResponseDto(post, null);//todo
 
 
         return postResponseDto;

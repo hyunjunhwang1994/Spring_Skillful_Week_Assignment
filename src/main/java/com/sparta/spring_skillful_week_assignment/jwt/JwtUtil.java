@@ -21,9 +21,13 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtUtil {
 
+    // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
+    // 사용자 권한 값의 KEY
     public static final String AUTHORIZATION_KEY = "auth";
+    // TOKEN 식별자
     private static final String BEARER_PREFIX = "Bearer ";
+    // 토큰 만료 시간
     private static final long TOKEN_TIME = 60 * 60 * 1000L;
 
     @Value("${jwt.secret.key}")
@@ -32,13 +36,14 @@ public class JwtUtil {
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 
+    // secretKey 값을 이용하여 실질적으로 토큰 검증에 사용 될 key값 생성
     @PostConstruct
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // header 토큰을 가져오기
+    // header에 있는 토큰을 있다면 가저오고 없다면 null 리턴
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
@@ -47,7 +52,7 @@ public class JwtUtil {
         return null;
     }
 
-    // 토큰 생성
+    // Jwt 토큰 생성
     public String createToken(String username) {
         Date date = new Date();
 
@@ -60,7 +65,7 @@ public class JwtUtil {
                         .compact();
     }
 
-    // 토큰 검증
+    // Jwt 토큰 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -77,7 +82,7 @@ public class JwtUtil {
         return false;
     }
 
-    // 토큰에서 사용자 정보 가져오기
+    // Jwt 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }

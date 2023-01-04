@@ -22,12 +22,12 @@ public class PostResponseDto {
     private String author;
     private String username;
 
-    private List<Comment> comment;
+    private List<PostCommentResponseDto> comment;
 
 
 
     // entity -> dto
-    public PostResponseDto(Post post, List<Comment> comment) {
+    public PostResponseDto(Post post, List<PostCommentResponseDto> comment) {
         this.id = post.getId();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();

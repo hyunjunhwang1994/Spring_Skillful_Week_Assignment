@@ -33,6 +33,7 @@ public class PostController {
     @GetMapping("/posts")
     public List<PostResponseDto> getPosts() {
 
+
         return postService.getPosts();
     }
 
