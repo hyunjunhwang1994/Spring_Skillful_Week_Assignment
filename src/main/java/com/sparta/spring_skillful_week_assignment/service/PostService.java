@@ -171,7 +171,7 @@ public class PostService {
                 if (post.isPresent()) {
 
 
-                    commentRepository.deleteByPost_Id(id);
+//                    commentRepository.deleteByPost_Id(id);
 
 
                     postRepository.deleteById(id);

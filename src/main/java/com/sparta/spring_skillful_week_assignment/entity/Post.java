@@ -35,7 +35,7 @@ public class Post extends Timestamped{
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     List<Comment> comments = new ArrayList<>();
 
     @Builder
