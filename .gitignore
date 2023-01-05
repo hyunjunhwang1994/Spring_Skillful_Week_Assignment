@@ -18,7 +18,8 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-application-securitySetting.properites
+application-securitySetting.properties
+
 .idea
 *.iws
 *.iml
