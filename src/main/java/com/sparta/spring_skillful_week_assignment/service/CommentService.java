@@ -5,6 +5,7 @@ import com.sparta.spring_skillful_week_assignment.dto.*;
 import com.sparta.spring_skillful_week_assignment.entity.Comment;
 import com.sparta.spring_skillful_week_assignment.entity.Post;
 import com.sparta.spring_skillful_week_assignment.entity.User;
+import com.sparta.spring_skillful_week_assignment.entity.UserRoleEnum;
 import com.sparta.spring_skillful_week_assignment.jwt.JwtUtil;
 import com.sparta.spring_skillful_week_assignment.message.ResponseMessage;
 import com.sparta.spring_skillful_week_assignment.message.StatusCode;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -109,6 +112,36 @@ public class CommentService {
 
             Comment comment = commentRepository.findByIdAndUser_Id(id, user.getId());
 
+
+
+
+            if (user.getRole() == UserRoleEnum.ADMIN) {
+                Optional<Comment> commentAdmin = commentRepository.findById(id);
+
+                if (commentAdmin.isPresent()) {
+                    Comment temp = commentAdmin.get();
+
+                    temp.updateComment(requestDto);
+
+                    PostCommentResponseDto postCommentResponseDto = new PostCommentResponseDto(temp);
+
+                    return CommentsResponseDto.responseDto(StatusCode.OK
+                            , ResponseMessage.UPDATE_COMMENT_SUCCESS, postCommentResponseDto);
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+
+
+
             if(comment != null){
 
                 comment.updateComment(requestDto);
@@ -155,6 +188,36 @@ public class CommentService {
             );
 
             Comment comment = commentRepository.findByIdAndUser_Id(id, user.getId());
+
+
+
+
+
+            if (user.getRole() == UserRoleEnum.ADMIN) {
+                Optional<Comment> commentAdmin = commentRepository.findById(id);
+
+                if (commentAdmin.isPresent()) {
+                    Comment temp = commentAdmin.get();
+
+                    commentRepository.deleteById(id);
+
+                    return CommentsResponseDto.responseDto(StatusCode.OK
+                            , ResponseMessage.DELETE_COMMENT_SUCCESS, temp.getContents());
+
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+
+
 
             if(comment != null){
                 commentRepository.deleteById(id);

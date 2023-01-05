@@ -18,7 +18,6 @@ import java.util.List;
 public class Post extends Timestamped{
 
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +26,7 @@ public class Post extends Timestamped{
     private String title;
 
 
-    @Column(length = 50000, nullable = false)
+    @Column(length = 250, nullable = false)
     private String contents;
 
 

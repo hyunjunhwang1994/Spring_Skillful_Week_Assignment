@@ -31,10 +31,11 @@ public class UserController {
 
     private final UserService userService;
 
-
     @PostMapping("/signup")
     public UserSignupResponseDto signup(@RequestBody @Validated UserSignupRequestDto userSignupRequestDto
             , @ApiIgnore Errors errors) {
+
+
         // 유효성 검증
         if (errors.hasErrors()) {
             return UserSignupResponseDto.responseDto(StatusCode.OK

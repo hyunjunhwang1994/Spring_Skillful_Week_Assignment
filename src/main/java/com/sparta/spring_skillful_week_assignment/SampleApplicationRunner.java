@@ -23,26 +23,6 @@ public class SampleApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        User user = new User("abcdEFG1", "abcdEFG123$", UserRoleEnum.USER);
-        userRepository.save(user);
-
-        User user2 = new User("abcdEF2G1", "abcdEFG1213$",UserRoleEnum.USER);
-        userRepository.save(user2);
-
-
-        PostRequestDto postRequestDto = new PostRequestDto(
-                "제목1", "컨텐츠1"
-        );
-
-        PostRequestDto postRequestDto2 = new PostRequestDto(
-                "제목2", "컨텐츠2"
-        );
-
-        Post post1 = new Post(postRequestDto, user);
-        Post post2 = new Post(postRequestDto2, user2);
-
-        postRepository.save(post1);
-        postRepository.save(post2);
 
     }
 }

@@ -73,7 +73,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
                 .title("Hanghae99 REST API")
-                .description("Post, User Rest Api")
+                .description("로그인 후 나오는 토큰 값을 Authorize에 입력하고 사용!")
                 .version("0.0.1")
                 .termsOfServiceUrl("Terms of service")
                 .contact(new Contact("Hyun Jun Hwang", "https://github.com/hyunjunhwang1994/Spring_Skillful_Week_Assignment", "hyunjunhwang1994@gmail.com"))

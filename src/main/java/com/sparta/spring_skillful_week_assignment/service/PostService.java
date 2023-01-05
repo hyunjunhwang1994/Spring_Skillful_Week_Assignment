@@ -232,10 +232,35 @@ public class PostService {
             );
 
 
+
             Post post = postRepository.findByIdAndUser_Id(id, user.getId());
 
-            if(post != null){
 
+            if (user.getRole() == UserRoleEnum.ADMIN) {
+                Optional<Post> postAdmin = postRepository.findById(id);
+
+                if (postAdmin.isPresent()) {
+                    Post temp = postAdmin.get();
+
+                    temp.updatePost(requestDto);
+                    List<Comment> commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(temp.getId());
+                    List<PostCommentResponseDto> postCommentResponseDto = new ArrayList<>();
+
+                    for (Comment comment : commentList) {
+                        postCommentResponseDto.add(new PostCommentResponseDto(comment));
+
+                    }
+
+                    PostResponseDto postResponseDto = new PostResponseDto(temp, postCommentResponseDto);
+
+                    return postResponseDto;
+
+                }
+
+            }
+
+
+            if(post != null){
 
                 post.updatePost(requestDto);
                 List<Comment> commentList = commentRepository.findAllByPost_IdOrderByCreatedAtDesc(post.getId());
