@@ -169,6 +169,11 @@ public class PostService {
                 Optional<Post> post = postRepository.findById(id);
 
                 if (post.isPresent()) {
+
+
+                    commentRepository.deleteByPost_Id(id);
+
+
                     postRepository.deleteById(id);
 
                     PostDeleteResponseDto postDeleteResponseDto = new PostDeleteResponseDto(
@@ -185,17 +190,20 @@ public class PostService {
             }
 
 
+            Post post = postRepository.findByIdAndUser_Id(id, user.getId());
 
-            int result = postRepository.deleteByIdAndUser_Id(id, user.getId());
 
 
-            if(result == 1){
+            if(post != null){
+                commentRepository.deleteByPost_Id(id);
+                postRepository.deleteById(id);
+
                 PostDeleteResponseDto postDeleteResponseDto = new PostDeleteResponseDto(
-                        StatusCode.OK, ResponseMessage.POST_DELETE_SUCCESS,result);
+                        StatusCode.OK, ResponseMessage.POST_DELETE_SUCCESS,1);
                 return postDeleteResponseDto;
-            }else {
+            } else {
                 PostDeleteResponseDto postDeleteResponseDto = new PostDeleteResponseDto(
-                        StatusCode.OK, ResponseMessage.POST_DELETE_FAIL,result);
+                        StatusCode.OK, ResponseMessage.POST_DELETE_FAIL,0);
                 return postDeleteResponseDto;
             }
 
